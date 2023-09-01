@@ -2,8 +2,8 @@ import random
 
 import pygame
 
-from Ball import Ball
-from Player import Player
+from src.Ball import Ball
+from src.Player import Player
 
 window_width = 800
 window_height = 600
