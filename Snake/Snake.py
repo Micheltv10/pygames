@@ -31,11 +31,11 @@ snake_body = [[window_width/2, window_height/2],
               [window_width/2 - scale*2, window_height/2],
               [window_width/2 - scale*3, window_height/2]]
 
-def save_score(score, name):
+def save_score(score):
     date = time.strftime("%d/%m/%Y")
     con = sqlite3.connect('scores.db')
     cur = con.cursor()
-    cur.execute("INSERT INTO score VALUES (?, ?, ?, ?)", (None, name, score, date))
+    cur.execute("INSERT INTO score (name, score, date) VALUES (?, ?, ?)", (name, score, date))
     con.commit()
     con.close()
 
@@ -45,6 +45,7 @@ def high_score():
     cur.execute("SELECT MAX(score) FROM score")
     high_score = cur.fetchone()
     con.close()
+    print(high_score)
     return high_score[0]
 
 
@@ -105,12 +106,12 @@ def game_over():
         snake_position[1] < 0 or
         snake_position[1] > window_height - scale):
         game_over_message()
-        save_score(score, "test")
+        save_score(score)
         return False
     for block in snake_body[1:]:
         if snake_position[0] == block[0] and snake_position[1] == block[1]:
             game_over_message()
-            save_score(score, "test")
+            save_score(score)
             return False
     return True
 

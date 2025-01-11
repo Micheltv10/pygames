@@ -5,12 +5,11 @@ from src.tetris import Tetris
 def high_score(score):
     with open('high_score.txt', 'r') as file:
         old_high_score = int(file.read())
-    if score > old_high_score:
-        with open('high_score.txt', 'w') as file:
-            file.write(str(score))
-        return score
-    else:
+    if score <= old_high_score:
         return old_high_score
+    with open('high_score.txt', 'w') as file:
+        file.write(str(score))
+    return score
 
 
 def create_text(text, font_size, color, x, y):
@@ -32,6 +31,7 @@ def paint_hud():
     create_text(F'Score: {game.score}', 30, pygame.Color(255, 255, 255), window_width / 2, 20)
 
 
+import itertools
 pygame.init()
 window_width = 360
 window_height = 660
@@ -96,12 +96,11 @@ while not done:
                 just_border = 0
             pygame.draw.rect(screen, color, [zoom * (j + 1), zoom * (i + 1), zoom, zoom], just_border)
     if game.figure is not None:
-        for i in range(4):
-            for j in range(4):
-                p = 4 * i + j
-                if p in game.figure.image():
-                    pygame.draw.rect(screen, colors[game.figure.color],
-                                     [zoom * (j + game.figure.x + 1), zoom * (i + game.figure.y + 1), zoom, zoom])
+        for i, j in itertools.product(range(4), range(4)):
+            p = 4 * i + j
+            if p in game.figure.image():
+                pygame.draw.rect(screen, colors[game.figure.color],
+                                 [zoom * (j + game.figure.x + 1), zoom * (i + game.figure.y + 1), zoom, zoom])
     paint_hud()
     pygame.display.flip()
     clock.tick(fps)
